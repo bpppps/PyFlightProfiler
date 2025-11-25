@@ -20,7 +20,7 @@ flight_profiler pid
 
 随后可以开始输入调试命令。
 
-![](docs/images/attach_success.png)
+![](images/attach_success.png)
 
 # 命令指南
 ## 命令描述help
@@ -36,7 +36,7 @@ help [command]
 | command | 否 | 需查看的命令名称 | stack |
 
 ### 输出展示
-![](docs/images/help.png)
+![](images/help.png)
 
 ## 线程栈分析stack
 ### 线程栈stack
@@ -70,10 +70,10 @@ stack -f ./stack.log
 
 执行`stack`命令可在控制台展示所有线程的栈信息。
 
-![img.png](docs/images/stack_linux.png)
+![img.png](images/stack_linux.png)
 分析native线程栈：
 
-![img.png](docs/images/stack_linux_native.png)
+![img.png](images/stack_linux_native.png)
 
 
 #### Mac环境
@@ -91,7 +91,7 @@ stack [filepath]
 ##### 输出展示
 执行`stack`命令可在控制台展示所有线程的栈信息。
 
-![img.png](docs/images/stack_mac.png)
+![img.png](images/stack_mac.png)
 
 
 ## 方法执行观测watch
@@ -142,7 +142,7 @@ watch __main__ func --expr "{return_obj,args}" -f "cost>10"
 watch __main__ classA func
 ```
 
-![](docs/images/watch.png)
+![](images/watch.png)
 
 输出的字段信息包括：
 
@@ -186,7 +186,7 @@ trace __main__ func -i 1
 trace __main__ classA func
 ```
 
-![](docs/images/trace.png)
+![](images/trace.png)
 
 ## 跨时间方法调用观测tt
 ### 跨时间区段下对方法调用进行观测
@@ -241,17 +241,17 @@ tt -t __main__ func -f "args[0][\"query\"]=='hello'"
 
 观测方法调用：
 
-![](docs/images/timetunnel_1.png)
+![](images/timetunnel_1.png)
 
 指定索引：
 
-![](docs/images/timetunnel_2.png)
+![](images/timetunnel_2.png)
 
 重新执行历史调用：
 
 可以看到索引已经发生变化：1000 -> 1010
 
-![](docs/images/timetunnel_3.png)
+![](images/timetunnel_3.png)
 
 ## 全局变量查看getglobal
 ### 观察模块全局变量/类的静态变量
@@ -283,7 +283,7 @@ getglobal __main__ g_list
 getglobal __main__ classA static_field
 ```
 
-![](docs/images/getglobal.png)
+![](images/getglobal.png)
 
 ## PythonVm 工具vmtool
 ### 查看类实例getInstances
@@ -315,7 +315,7 @@ vmtool -a getInstances -c __main__ A
 vmtool -a getInstances -c __main__ A -e instances[0].val
 ```
 
-![img.png](docs/images/vmtool.png)
+![img.png](images/vmtool.png)
 
 ### 强制垃圾回收forceGc
 命令如下：
@@ -329,7 +329,7 @@ vmtool -a forceGc
 vmtool -a forceGc
 ```
 
-![img.png](docs/images/vmtool_gc.png)
+![img.png](images/vmtool_gc.png)
 
 ## 获取文件模块名称module
 该命令会输出文件名在注入进程中对应的模块，方便用户根据异常栈直接定位方法或变量。
@@ -356,9 +356,9 @@ module ~/tt_main.py
 module ~/not_exist.py
 ```
 
-![img.png](docs/images/module_exist.png)
+![img.png](images/module_exist.png)
 
-![img.png](docs/images/module_not_exist.png)
+![img.png](images/module_not_exist.png)
 
 ## 程序热点火焰图Perf
 对程序进程采样profile，生成火焰图，方便用户优化程序热点，基于[py-spy](https://github.com/benfred/py-spy)实现。
@@ -392,7 +392,7 @@ perf -d 30 -f ~/flamegraph.svg
 
 <font style="color:#DF2A3F;">在MacOS下使用该命令，py-spy需要用户的root权限</font>
 
-![img.png](docs/images/perf.png)
+![img.png](images/perf.png)
 
 ## 开启交互式console
 在指定进程中开启交互式console，支持用户执行自定义脚本，获取系统属性等操作。
@@ -410,7 +410,7 @@ console
 console
 ```
 
-![img.png](docs/images/console.png)
+![img.png](images/console.png)
 
 
 ## 内存分析mem
@@ -427,7 +427,7 @@ mem summary --limit 100 --order descending
 
 其中`limit`参数控制TOP展示数量，`order`控制按大小递减或递增（descending/ascending）。
 
-![img.png](docs/images/mem_summary.png)
+![img.png](images/mem_summary.png)
 
 ### 内存diff
 该命令可以比较两个时间点的内存大小差异：
@@ -438,7 +438,7 @@ mem diff --interval 10 --limit 100 --order descending
 
 如上述命令，取10s前后的内存快照，比对差异，按大小递减展示差异最大的内存变量类型，效果如下：
 
-![img.png](docs/images/mem_diff.png)
+![img.png](images/mem_diff.png)
 
 ## GIL锁性能分析
 ### GIL锁损耗统计
@@ -448,7 +448,7 @@ gilstat on
 
 执行`gilstat on`命令后，控制台会每隔5s输出每个线程的GIL锁损耗统计。
 
-![img.png](docs/images/gilstat_on.png)
+![img.png](images/gilstat_on.png)
 
 输出信息的字段包括：
 
@@ -469,8 +469,7 @@ gilstat on 5 5
 
 第一个参数5代表获取GIL锁耗时阈值5ms，持有GIL锁耗时阈值5ms。即当有线程获取GIL锁阻塞超过5ms，或者线程GIL锁持有时间超过5ms，则会打印一条监控。该命令可以分析线上一些长尾超时query。
 
-![](docs/images/gilstat_report.png)
-![img.png](docs/images/shell.png)
+![](images/gilstat_report.png)
 
 ## PyTorch框架采样
 ### 对函数执行进行采样profile
@@ -499,11 +498,11 @@ torch profile module [class] method [-f <value>]
 torch profile __main__ A hello
 ```
 
-![](docs/images/torch_profile_1.png)
+![](images/torch_profile_1.png)
 
 生成的trace.json文件需要放入chrome浏览器的<font style="color:#DF2A3F;">chrome://tracing/</font><font style="color:rgb(0, 0, 0);">路径下进行可视化，展示结果如图所示</font>
 
-![](docs/images/torch_profile_2.png)
+![](images/torch_profile_2.png)
 
 ### torch显存快照
 基于Torch Profiler实现，能够对进程中的显存进行快照，或录制方法执行过程中的显存分配行为：
@@ -534,7 +533,7 @@ torch memory -r __main__ Solution call
 
 生成的snapshot.pickle文件需要放入[https://pytorch.org/memory_viz](https://pytorch.org/memory_viz)中进行分析<font style="color:rgb(0, 0, 0);">，展示结果如图所示，其中左侧列表为分配和收集的时序行为：</font>
 
-![img.png](docs/images/torch_mem_profile1.png)
+![img.png](images/torch_mem_profile1.png)
 
 关于具体原理/如何从图中获取有效信息：[https://pytorch.org/docs/2.5/torch_cuda_memory.html](https://pytorch.org/docs/2.5/torch_cuda_memory.html)
 
