@@ -1,0 +1,33 @@
+from ubuntu:latest
+RUN rm -rf /etc/apt/sources.list
+COPY ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources
+RUN apt update
+
+# c dev
+RUN apt-get install -y autoconf automake libtool build-essential make cmake gdb gdbserver openssh-server rsync zip git
+RUN apt-get install -y vim net-tools curl
+# python deps
+RUN apt-get install -y openssl libffi-dev zlib1g-dev libbz2-dev libssl-dev libreadline-dev sqlite3 \
+    uuid-dev zlib1g-dev tcl-dev tk-dev libsqlite3-dev libc6-dev libgdbm-dev libgdbm-compat-dev libncurses5-dev \
+    liblzma-dev nis libnsl-dev
+
+RUN echo "install python 3.10.14:"
+COPY install_python.sh /tmp/install_python.sh
+RUN chmod 755 /tmp/install_python.sh
+RUN sh /tmp/install_python.sh 3.10.14
+
+
+# configure SSH for communication with Visual Studio
+RUN mkdir -p /var/run/sshd
+RUN echo 'root:root' | chpasswd \
+    && sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
+    && sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+RUN mkdir -p /source
+
+
+WORKDIR /source
+
+CMD ["/usr/sbin/sshd", "-D"]
+
+EXPOSE 22

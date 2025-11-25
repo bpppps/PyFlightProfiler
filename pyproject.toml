@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "flight_profiler"
+version = "1.0.1"
+description = "A diagnostic toolkit for on-the-fly analysis of remote python processes."
+homepage = "https://github.com/alibaba/PyFlightProfiler"
+readme = "README.md"
+authors = []
+packages = [
+    { include = "flight_profiler" }
+]
+
+include = ["flight_profiler/lib/*"]
+
+[tool.poetry.build]
+script = "build_c_extensions.py"
+generate-setup-file = true
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.15"
+pympler =  "^1.1"
+py-spy = { version = "^0.4.0", markers = "python_version in '3.8, 3.9, 3.10, 3.11, 3.12, 3.13'" }
+pystack = { version = "^1.4.1", markers = "sys_platform == 'linux'" }
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+torch = "*"
+
+[tool.poetry.scripts]
+flight_profiler = "flight_profiler.client:run"
+
+[build-system]
+requires = ["poetry-core", "setuptools"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,9 @@
+build/
+*.log
+/dist/
+/flight_profiler/lib/
+*.pyc
+.idea/*
+setup.py
+.vscode/*
+*.iml
