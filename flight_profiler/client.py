@@ -246,6 +246,30 @@ def find_port_available(start_port: int, end_port: int) -> int:
                 continue
     return -1
 
+def check_directory_write_permission(directory: str) -> bool:
+    """
+    Check if the current process has write permission to the specified directory.
+
+    Args
+        directory(str): The directory path to check
+        
+    Returns:
+        True if write permission is available, False otherwise
+    """
+    try:
+        # Try to create a temporary file in the directory
+        test_file = os.path.join(directory, ".write_test_tmp")
+        with open(test_file, "w") as f:
+            f.write("test")
+        # If successful, remove the test file
+        os.remove(test_file)
+        return True
+    except (PermissionError, OSError):
+        return False
+    except Exception:
+        return False
+
+
 def get_base_addr(current_directory: str, server_pid: str, platform: str) -> int:
     base_addr_locate_shell_path = os.path.join(
         current_directory, f"shell/{platform}/py_bin_base_addr_locate.sh"
@@ -376,6 +400,7 @@ def show_pre_attach_info(server_pid: str, debug: bool = False):
         get_process_uids,
     )
 
+    current_directory = os.path.dirname(os.path.abspath(__file__))
     server_executable: str = get_py_bin_path(server_pid)
     client_executable: str = get_py_bin_path(os.getpid())
     same: bool = server_executable == client_executable
@@ -387,11 +412,19 @@ def show_pre_attach_info(server_pid: str, debug: bool = False):
     # Print executable information
     print(f"PyFlightProfiler version: {version('flight_profiler')}")
     print(f"[INFO] Platform system: {platform.system()}. Architecture: {platform.machine()}")
-
+    print(f"[INFO] Installation directory: {current_directory}.")
     if debug:
         print(f"[DEBUG] Server Python Executable: {server_executable}")
         print(f"[DEBUG] Client Python Executable: {client_executable}")
     print(f"[INFO] Verify pyFlightProfiler and target are using the same python executable: {'🌟' if same else '❌'}")
+
+    # Check directory write permissions
+    directory_write_permission = check_directory_write_permission(current_directory)
+    permission_status = "🌟" if directory_write_permission else "❌"
+    print(f"[INFO] Verify pyFlightProfiler has write permission to installation directory: {permission_status}")
+    if not directory_write_permission:
+        print(f"[WARN] PyFlightProfiler needs write permission to {current_directory} to function properly. "
+              f"Please try run {COLOR_RED}flight_profiler with appropriate permissions{COLOR_END}.")
 
     # Print permission information
     if server_uids and client_uids:
@@ -410,15 +443,15 @@ def show_pre_attach_info(server_pid: str, debug: bool = False):
         )
 
         privilege_status = "🌟" if has_sufficient_privileges else "❌"
-        print(f"[INFO] Verify pyFlightProfiler has sufficient permission to attach target: {privilege_status}")
+        print(f"[INFO] Verify pyFlightProfiler has user permission to attach target: {privilege_status}")
 
         # Additional check for root privileges
         if server_real_uid == 0 and client_effective_uid != 0:
-            print(f"[WARN] Target process is running as root, elevated privileges may be required")
+            print(f"[WARN] Target process is running as root, elevated privileges may be required.")
         elif client_effective_uid != 0 and server_real_uid != client_real_uid:
-            print(f"[WARN] Target process is owned by a different user, permission issues may occur")
+            print(f"[WARN] Target process is owned by a different user, permission issues may occur.")
     else:
-        print(f"[INFO] Permission information not available on this platform")
+        print(f"[INFO] Permission information not available on this platform.")
 
 def run():
     parser = argparse.ArgumentParser(
