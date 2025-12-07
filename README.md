@@ -204,7 +204,7 @@ PyFlightProfiler includes several additional tools for advanced diagnostics:
 PyFlightProfiler is inspired by the design of [Arthas](https://github.com/alibaba/arthas).
 The project is developed by Alibaba Group. The code is distributed under the Apache License (Version 2.0). This product contains various third-party components under other open-source licenses. See the `NOTICE` file for more information.
 
-The implementation of the trace subcommand is conceptually inspired by [pyinstrument](https://github.com/joerick/pyinstrument). The process attachment mechanism on Linux was inspired by [linux-inject](https://github.com/gaffe23/linux-inject). Python bytecode transform mechanism is inspired by [Python on-the-fly function update](https://hardenedapple.github.io/stories/computers/python_function_override/).
+The implementation of the trace subcommand is conceptually inspired by [pyinstrument](https://github.com/joerick/pyinstrument). The process attachment mechanism on Linux is inspired by [linux-inject](https://github.com/gaffe23/linux-inject). Python bytecode transform mechanism is inspired by [Python on-the-fly function update](https://hardenedapple.github.io/stories/computers/python_function_override/).
 The following open-source libraries and tools are used in PyFlightProfiler, either in their close-to-original form or as an inspiration:
 
 - [pystack](https://github.com/bloomberg/pystack) - Used for Python stack analysis on Linux

@@ -28,7 +28,7 @@ class ForceGcExecutor(VmtoolActionExecutor):
         try:
             count = gc.collect()
         except:
-            return f"forceGc {COLOR_RED}failed{COLOR_END}, error is: {traceback.format_exc()}"
+            return f"ForceGc {COLOR_RED}failed{COLOR_END}, error is: {traceback.format_exc()}"
 
         return f"{COLOR_GREEN}Gc execute successfully, totally {count} unreachable objects are freed.{COLOR_END}"
 
@@ -50,7 +50,7 @@ class GetInstanceExecutor(VmtoolActionExecutor):
         if cls is None or not inspect.isclass(cls):
             return (
                 f"{COLOR_RED}No class named {COLOR_ORANGE}{class_name}{COLOR_END}{COLOR_RED}"
-                f" is found in module {module_name}!"
+                f" is found in module {module_name}!{COLOR_END}"
             )
 
         class_referrers = gc.get_referrers(cls)

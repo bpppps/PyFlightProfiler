@@ -21,6 +21,7 @@ from flight_profiler.utils.render_util import (
     COLOR_ORANGE,
     COLOR_RED,
     COLOR_WHITE_255,
+    build_long_spy_command_hint,
 )
 
 TORCH_PROFILE_ENABLE = False
@@ -50,7 +51,7 @@ def generate_torch_profile_wrapper(torch_cmd: TorchProfileCommand):
                         prof = None
                         try:
                             activities = [ProfilerActivity.CPU, ProfilerActivity.CUDA]
-                            prof = profile(activities=activities)
+                            prof = profile(activities=activities, with_stack=True, record_shapes=True)
                             prof.__enter__()
                             synchronize()
                         except:
@@ -118,7 +119,7 @@ def generate_torch_profile_wrapper(torch_cmd: TorchProfileCommand):
                         prof = None
                         try:
                             activities = [ProfilerActivity.CPU, ProfilerActivity.CUDA]
-                            prof = profile(activities=activities)
+                            prof = profile(activities=activities, with_stack=True, record_shapes=True)
                             prof.__enter__()
                         except:
                             profile_error_msg = traceback.format_exc()
@@ -432,6 +433,17 @@ class TorchProfileAgent:
                     cmd.need_wrap_nested_inplace = True
                     cmd.nested_code_obj = wrapper_result.value.nested_code_obj
                 cmd.origin_code = wrapper_result.value
+                cmd.out_q.output_msg_nowait(
+                    Message(
+                    False,
+                        build_long_spy_command_hint(
+                            cmd.module_name,
+                            cmd.class_name,
+                            cmd.method_name,
+                            cmd.nested_method
+                        )
+                    )
+                )
                 self.cmd = cmd
         elif cmd.is_memory():
             memory_cmd: TorchMemoryCommand = cmd
@@ -522,6 +534,17 @@ class TorchProfileAgent:
                         cmd.need_wrap_nested_inplace = True
                         cmd.nested_code_obj = wrapper_result.value.nested_code_obj
                     cmd.origin_code = wrapper_result.value
+                    cmd.out_q.output_msg_nowait(
+                        Message(
+                    False,
+                            build_long_spy_command_hint(
+                                cmd.module_name,
+                                cmd.class_name,
+                                cmd.method_name,
+                                cmd.nested_method
+                            )
+                        )
+                    )
                     self.cmd = cmd
         else:
             cmd.out_q.output_msg_nowait(
